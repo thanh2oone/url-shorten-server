@@ -8,8 +8,8 @@ const cookieParser = require('cookie-parser');
 const jwt = require("jsonwebtoken");
 const Cookies = require('js-cookie');
 
-const User = require('./models/User');
-const Url = require('./models/Url');
+const User = require('./src/models/User');
+const Url = require('./src/models/Url');
 
 /* Session
 Be careful when setting this to true, as compliant clients will not send the cookie back to the server

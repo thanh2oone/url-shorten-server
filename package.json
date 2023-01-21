@@ -10,11 +10,13 @@
     "nodemon": "^2.0.20",
     "shortid": "^2.2.16"
   },
+  "main": "index.js",
   "engines": {
     "node": "14.x"
   },
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "name": "back",
   "version": "1.0.0",
