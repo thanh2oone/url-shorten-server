@@ -14,7 +14,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon src/index.js"
   },
   "name": "back",
   "version": "1.0.0",
