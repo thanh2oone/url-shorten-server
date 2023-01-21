@@ -1,7 +1,11 @@
 {
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "js-cookie": "^3.0.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.8.0",
     "nodemon": "^2.0.20",
     "shortid": "^2.2.16"
@@ -17,13 +21,13 @@
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thanhrnjs/urlshorten-react-server.git"
+    "url": "git+https://github.com/tnahh/urlshorten-react-server.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/thanhrnjs/urlshorten-react-server/issues"
+    "url": "https://github.com/tnahh/urlshorten-react-server/issues"
   },
-  "homepage": "https://github.com/thanhrnjs/urlshorten-react-server#readme",
+  "homepage": "https://github.com/tnahh/urlshorten-react-server#readme",
   "description": ""
 }
