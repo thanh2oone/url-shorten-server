@@ -4,22 +4,21 @@ const mongoose = require('mongoose');
 require('dotenv').config({ path: './.env' });
 const shortid = require('shortid');
 const bcrypt = require('bcrypt');
+const session = require('express-session')
 const cookieParser = require('cookie-parser');
-const jwt = require("jsonwebtoken");
-const Cookies = require('js-cookie');
+const store = new session.MemoryStore();
 
 const User = require('./src/models/User');
 const Url = require('./src/models/Url');
 
-/* Session
-Be careful when setting this to true, as compliant clients will not send the cookie back to the server
-in the future if the browser does not have an HTTPS connection.
-Please note that secure: true is a recommended option. 
-However, it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies. 
-If secure is set, and you access your site over HTTP, the cookie will not be set. 
-If you have your node.js behind a proxy and are using secure: true, you need to set “trust proxy” in express:
-*/
-app.use(cookieParser())
+app.use(cookieParser());
+
+app.use(session({
+    secret: 'edwjihugbhcsnadslmk',
+    resave: false,
+    saveUninitialized: true,
+    store
+}))
 
 // Body parser
 app.use(express.urlencoded({ extended: true }));
@@ -43,7 +42,7 @@ try {
     process.exit(1)
 }
 
-app.use('*', (req, res, next) => {
+app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -56,21 +55,8 @@ app.use('*', (req, res, next) => {
     next();
 });
 
-// const requireAuth = async (req, res, next) => {
-//     if (!req.cookie.id) {
-//         res.redirect('/');
-//         return;
-//     }
-//     const user = await User.findOne({_id: req.cookie.id});
-//     if (!user) {
-//         res.redirect('/');
-//         return;
-//     }
-//     next();
-// }
-
 app.get('/', (req, res) => {
-    res.send('Welcome')
+    res.send('Welcome');
 })
 
 app.get('/api/url', (req, res, next) => {
@@ -151,21 +137,27 @@ app.post('/api/login', async (req, res, next) => {
             res.send('Password is incorrect');
         }
         else {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-            Cookies.set("access_token", token, {
-                httpOnly: true,
-                expires: 1, 
-                path: ''
-            });
-            res
-                // .cookie("access_token", token, {
-                //     httpOnly: true
-                // })
-                // .status(200)
-                .send('Login successfull');
+            res.send('Login successfull');
         }
     }
 })
+
+const validateAuth = (req, res, next) => {
+    const { authorization } = req.headers;
+    if (authorization) next();
+    else res.status(403).send({ error: 'Incorrect credentials' });
+}
+
+const validateCookies = (req, res, next) => {
+    const { cookies } = req;
+    if (cookies.sessionID) {
+        console.log('>>>>> BACK: Session ID existed');
+        if (cookies.sessionID === '123456') next();
+        else res.status(403).send({ error: 'Not authenticated' });
+    } else res.status(403).send({ error: 'Not authenticated' });
+
+    next();
+}
 
 app.listen(process.env.PORT || 5001, () => {
     console.log('Listening on ' + process.env.BASE_BACK)

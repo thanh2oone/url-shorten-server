@@ -4,15 +4,12 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "js-cookie": "^3.0.1",
-    "jsonwebtoken": "^9.0.0",
-    "mongoose": "^6.8.0",
-    "nodemon": "^2.0.20",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.9.0",
     "shortid": "^2.2.16"
   },
-  "main": "index.js",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "node index.js",
@@ -20,7 +17,6 @@
   },
   "name": "back",
   "version": "1.0.0",
-  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tnahh/urlshorten-react-server.git"
@@ -31,5 +27,8 @@
     "url": "https://github.com/tnahh/urlshorten-react-server/issues"
   },
   "homepage": "https://github.com/tnahh/urlshorten-react-server#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
