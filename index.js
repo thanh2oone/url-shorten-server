@@ -1,3 +1,6 @@
+const User = require('./src/models/User');
+const Url = require('./src/models/Url');
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -7,16 +10,24 @@ const bcrypt = require('bcrypt');
 const session = require('express-session')
 const cookieParser = require('cookie-parser');
 const store = new session.MemoryStore();
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
-const User = require('./src/models/User');
-const Url = require('./src/models/Url');
+app.use(cors({
+    origin: process.env.BASE_FRONT,
+    methods: ["GET", "POST", "DELETE"],
+    credentials: true
+}))
 
 app.use(cookieParser());
 
 app.use(session({
-    secret: 'edwjihugbhcsnadslmk',
+    secret: 'edwjihugbhcsnadsadafcsgsdfsdslmk',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: {
+        expires: 60 * 60 * 24 // 1 day
+    },
     store
 }))
 
@@ -42,21 +53,35 @@ try {
     process.exit(1)
 }
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    // Pass to next layer of middleware
-    next();
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     // Request methods you wish to allow
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//     // Request headers you wish to allow
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
+//     // Set to true if you need the website to include cookies in the requests sent
+//     // to the API (e.g. in case you use sessions)
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//     // Pass to next layer of middleware
+//     next();
+// });
+
+app.get('/api/logout', (req, res) => {
+    if (req.session.User) {
+        req.session.destroy();
+        res.send('Logouted');
+    }
+    else res.send('You don\'t login');
 });
 
 app.get('/', (req, res) => {
-    res.send('Welcome');
+    if (req.session.User) {
+        res.send({
+            logged: true,
+            username: req.session.User.account.email
+        });
+    }
+    else res.send('Not log')
 })
 
 app.get('/api/url', (req, res, next) => {
@@ -72,7 +97,7 @@ app.get('/api/url', (req, res, next) => {
 app.post('/api/shorten', (req, res, next) => {
     const data = req.body;
     const shortID = shortid.generate();
-    new Url({
+    new User({
         original: data.original,
         shortid: shortID,
         timeCreate: new Date().toLocaleDateString('vi-VN', {
@@ -86,6 +111,24 @@ app.post('/api/shorten', (req, res, next) => {
     })
     res.send(process.env.BASE_BACK + '/' + shortID)
 });
+
+app.post('/user/shorten', (req, res, next) => {
+    if (req.session.User) {
+        const data = req.body;
+        const shortID = shortid.generate();
+        new User({
+            urls: {
+                original: { type: String },
+                shortid: { type: String },
+                timeCreate: { type: String },
+            }
+        }).save((err) => {
+            if (!err) console.log(">>>>> Save successfully");
+            else console.error();
+        })
+        res.send(process.env.BASE_BACK + '/' + shortID)
+    } else res.redirect('/login')
+})
 
 app.get('/:shortid', async (req, res) => {
     const url = await Url.findOne({ shortid: req.params.shortid })
@@ -130,14 +173,16 @@ app.post('/api/signup', (req, res) => {
 
 app.post('/api/login', async (req, res, next) => {
     const user = await User.findOne({ "account.email": req.body.email });
-    if (!user) res.send('User not found');
+
+    if (!user) res.send({ logged: false, detail: 'User not found' });
     else {
         const passCorrect = await bcrypt.compare(req.body.password, user.account.password);
         if (!passCorrect) {
-            res.send('Password is incorrect');
+            res.send({ logged: false, detail: 'Password is incorrect' });
         }
         else {
-            res.send('Login successfull');
+            req.session.User = user;
+            res.send({ logged: true, detail: 'Login successfull' })
         }
     }
 })
