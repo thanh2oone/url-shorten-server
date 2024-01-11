@@ -1,7 +1,5 @@
-const userRouter = require('./routes/userRouter');
+import userRouter from './routes/UserRouter.js'
 
-const route = (app) => {
+export const routeApp = (app) => {
     app.use('/', userRouter);
 }
-
-module.exports = route;

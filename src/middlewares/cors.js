@@ -1,11 +1,9 @@
-const cors = require('cors');
+import cors from 'cors'
 
-const setCors = (app) => {
+export const setCors = (app) => {
     app.use(cors({
         origin: process.env.BASE_FRONT,
-        methods: ["GET", "POST", "DELETE"],
+        methods: ["GET", "POST", "DELETE", "PUT"],
         credentials: true
     }))
 }
-
-module.exports = setCors;

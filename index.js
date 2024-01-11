@@ -1,16 +1,12 @@
-const express = require('express');
-const app = express();
-
-const route = require('./src/routes');
-const connectDB = require('./src/database/db');
-const setCors = require('./src/middlewares/cors');
-const setSession = require('./src/middlewares/session');
-
-require('dotenv').config({ path: './.env' });
-const shortid = require('shortid');
-const bcrypt = require('bcrypt');
-
-const jwt = require('jsonwebtoken');
+import express from 'express'
+const app = express()
+import { routeApp } from './src/routes.js'
+import { connectMongo } from './src/database/mongoConfig.js'
+import { connectFireBase } from './src/database/firebaseConfig.js'
+import { setCors } from './src/middlewares/cors.js'
+import { setSession } from './src/middlewares/session.js'
+import dotenv from 'dotenv'
+dotenv.config({ path: './.env' });
 
 setCors(app);
 setSession(app);
@@ -19,19 +15,12 @@ setSession(app);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 
-route(app);
-connectDB();
+// Connect database
+connectMongo();
+// connectFireBase();
 
-const validateCookies = (req, res, next) => {
-    const { cookies } = req;
-    if (cookies.sessionID) {
-        console.log('>>>>> BACK: Session ID existed');
-        if (cookies.sessionID === '123456') next();
-        else res.status(403).send({ error: 'Not authenticated' });
-    } else res.status(403).send({ error: 'Not authenticated' });
-    next();
-}
+routeApp(app);
 
-app.listen(process.env.PORT || 5001, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log('Listening on ' + process.env.BASE_BACK)
 });

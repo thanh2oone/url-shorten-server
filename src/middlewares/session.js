@@ -1,16 +1,14 @@
-const session = require('express-session')
-const cookieParser = require('cookie-parser');
+import session from 'express-session'
+import cookieParser from 'cookie-parser'
 
-const setSession = (app) => {
+export const setSession = (app) => {
     app.use(cookieParser());
     app.use(session({
         secret: 'edwjihugbhcsnadsadafcsgsdfsdslmk',
         resave: false,
         saveUninitialized: false,
         cookie: {
-            maxAge: 60000 * 60 * 24 // 1 day
+            expires: 60000 * 60 * 24 // 1 day
         },
     }))
 }
-
-module.exports = setSession;

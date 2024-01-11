@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose";
 
 const User = new mongoose.Schema({
     account: {
@@ -6,13 +6,14 @@ const User = new mongoose.Schema({
         password: { type: String, required: true },
         timeSignUp: { type: String, required: true },
     },
+    // access_token: { type: String, required: true },
     urls: [
         {
             original: { type: String },
             shortid: { type: String },
-            timeCreate: { type: String },
+            timeCreate: { type: String },   
         }
     ]
 });
 
-module.exports = mongoose.model('User', User);
+export default mongoose.model('User', User);
