@@ -20,4 +20,4 @@ const reori = async (req, res, next) =>  {
     else res.send('Not Found ID');
 }
 
-export default reori
+export default reori;

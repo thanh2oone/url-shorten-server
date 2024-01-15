@@ -1,9 +1,11 @@
 const home = (req, res, next) => {
-    if (req.session.User) {
+    const cookies = req.cookies;
+    
+    if (cookies && cookies.access_token) {
         res.send({
             role: 'User',
             logged: true,
-            username: req.session.User.account.email
+            username: req.User.account.email
         })
     }
     else {

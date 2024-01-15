@@ -4,12 +4,14 @@ import { routeApp } from './src/routes.js'
 import { connectMongo } from './src/database/mongoConfig.js'
 import { connectFireBase } from './src/database/firebaseConfig.js'
 import { setCors } from './src/middlewares/cors.js'
-import { setSession } from './src/middlewares/session.js'
+import cookieParser from 'cookie-parser'
+import authenticateUser from './src/middlewares/authenticate.js';
 import dotenv from 'dotenv'
 dotenv.config({ path: './.env' });
 
 setCors(app);
-setSession(app);
+app.use(cookieParser());
+app.use(authenticateUser);
 
 // Body parser
 app.use(express.urlencoded({ extended: true }));

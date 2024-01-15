@@ -3,9 +3,10 @@ import User from '../../models/User.js';
 import shortid from 'shortid'
 
 const shorten = (req, res, next) => {
+    const cookies = req.cookies;
     const shortID = shortid.generate();
 
-    if (req.session.User) {
+    if (cookies && cookies.access_token) {
         const newUrl = ({
             original: req.body.original,
             shortid: shortID,
@@ -16,7 +17,7 @@ const shorten = (req, res, next) => {
             })
         })
 
-        User.findOne({ "account.email": req.session.User.account.email }, (err, user) => {
+        User.findOne({ "account.email": req.User.account.email }, (err, user) => {
             if (err) console.error(err);
             else {
                 user.urls.push(newUrl);

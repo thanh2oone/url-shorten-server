@@ -1,5 +1,6 @@
 import User from '../../models/User.js';
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 const login = async (req, res, next) => {
     const user = await User.findOne({ "account.email": req.body.email });
@@ -11,12 +12,11 @@ const login = async (req, res, next) => {
             res.send({ logged: false, detail: 'Password is incorrect' });
         }
         else {
-            // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-            // res.cookie('access_token', token, {
-            //     httpOnly: true
-            // }).status(200).send({ logged: true, detail: 'Login successfull', username: user.account.email });
-            req.session.User = user;
-            res.send({ logged: true, detail: 'Login successfull', username: req.session.User.account.email });
+            const token = jwt.sign({ "userId": user._id }, process.env.JWT_SECRET);
+            res.cookie('access_token', token, {
+                httpOnly: true,
+                expires: new Date(Date.now() + (30 * 24 * 60 * 60000))
+            }).status(200).send({ logged: true, detail: 'Login successfull', username: user.account.email });
         }
     }
 }

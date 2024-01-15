@@ -1,19 +1,16 @@
 import User from '../../models/User.js';
 
 const allurls = (req, res, next) => {
-    if (req.session.User) {
-        User.findOne({ "account.email": req.session.User.account.email }, (err, user) => {
-            if (err) console.log(err);
-            else {
-                res.send({
-                    logged: true,
-                    urls: user.urls
-                })
-            }
+    const cookies = req.cookies;
+
+    if (cookies && cookies.access_token) {
+        res.send({
+            logged: true,
+            urls: req.User.urls
         })
     } else {
         res.send({
-            logger: false // redirect '/login' in frontend
+            logger: false
         })
     }
 }

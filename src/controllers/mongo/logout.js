@@ -1,7 +1,9 @@
-const logout = (req, res, next) => {
-    if (req.session.User) {
-        req.session.destroy();
-        res.send({ logged: false });
+const logout = (req, res) => {
+    const cookies = req.cookies;
+    
+    if (cookies && cookies.access_token) {
+        res.clearCookie("access_token");
+        res.end();
     }
 }
 

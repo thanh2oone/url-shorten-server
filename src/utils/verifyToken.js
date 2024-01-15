@@ -1,5 +1,5 @@
-import  jwt  from 'jsonwebtoken'
-import {notifyError} from './notifyError.js';
+import jwt from 'jsonwebtoken'
+import { notifyError } from './notifyError.js';
 
 export const verifyToken = (req, res, next) => {
     const token = req.cookies.access_token;

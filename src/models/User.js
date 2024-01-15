@@ -6,7 +6,6 @@ const User = new mongoose.Schema({
         password: { type: String, required: true },
         timeSignUp: { type: String, required: true },
     },
-    // access_token: { type: String, required: true },
     urls: [
         {
             original: { type: String },
