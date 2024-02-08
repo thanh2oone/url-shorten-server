@@ -1,18 +1,17 @@
-import express from 'express'
-const router = express.Router()
-import  userController  from '../controllers/UserController.js'
-import { verifyToken } from '../utils/verifyToken.js'
+import express from 'express';
+const router = express.Router();
+import userController from '../controllers/UserController.js';
+import authenticateUser from '../middlewares/Authenticate.js';
 
-router.get('/api/home', userController.home);
-// router.get('/api/allurls', verifyToken, userController.allurls);
-router.get('/api/allurls', userController.allurls);
+router.get('/api/auth', authenticateUser, userController.auth);
+router.get('/api/list', authenticateUser, userController.listUrls);
 
 router.post('/api/shorten', userController.shorten);
 router.post('/api/login', userController.login);
 router.post('/api/signup', userController.signup);
-router.delete('/api/delete/:shortid', userController.delete);
+router.delete('/api/delete/:shortId', authenticateUser, userController.delete);
 
-router.get('/:shortid', userController.reori);
+router.get('/:shortId', userController.redirect);
 router.get('/api/logout', userController.logout);
 
-export default router
+export default router;

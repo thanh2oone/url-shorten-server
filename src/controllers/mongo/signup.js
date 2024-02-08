@@ -1,30 +1,36 @@
 import User from '../../models/User.js';
 import bcrypt from "bcrypt";
 
-const signup = (req, res, next) => {
+const signup = (req, res) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password1 = req.body.password1;
+    const password2 = req.body.password2;
+
     const saltRounds = 10;
-    bcrypt.hash(req.body.password, saltRounds, (error, hash) => {
-        if (req.body.password === req.body.cfPassword) {
-            new User({
-                account: {
-                    email: req.body.email,
+    bcrypt.hash(password1, saltRounds, (error, hash) => {
+        if (password1 === password2) {
+            const newUser = new User({
+                account: {  
+                    username: username,
+                    email: email,
                     password: hash,
-                    timeSignUp: new Date().toLocaleDateString('vi-VN', {
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        second: 'numeric'
+                    createAt: new Date().toLocaleDateString("vi-vn", {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: 'numeric', minute: 'numeric', second: 'numeric'
                     })
                 },
                 urls: []
-            }).save((err, data) => {
+            })
+            
+            newUser.save((err, data) => {
                 if (!err) {
-                    console.log(">>>>> User created");
-                    res.send('Account creates successfull')
-                } else res.send(err)
+                    res.send({ status: 200, message: 'Account creates successfull' })
+                } else res.send(err);
             })
         }
-        else res.send('Passwords are not same')
-    });
+        else res.send({ status: 401, message: 'Passwords are not same' })
+    })
 }
 
-export default signup
+export default signup;

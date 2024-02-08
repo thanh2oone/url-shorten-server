@@ -1,23 +1,22 @@
 import Url from '../../models/Guest.js'
 import User from '../../models/User.js';
-import shortid from 'shortid'
+import shortid from 'shortid';
 
 const shorten = (req, res, next) => {
     const cookies = req.cookies;
-    const shortID = shortid.generate();
+    const shortId = shortid.generate();
 
-    if (cookies && cookies.access_token) {
+    if (cookies && cookies.access_token_shorten) {
         const newUrl = ({
-            original: req.body.original,
-            shortid: shortID,
-            timeCreate: new Date().toLocaleDateString('vi-VN', {
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric'
+            longUrl: req.body.longUrl,
+            shortId: shortId,
+            createAt: new Date().toLocaleDateString("vi-vn", {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: 'numeric', minute: 'numeric', second: 'numeric'
             })
         })
 
-        User.findOne({ "account.email": req.User.account.email }, (err, user) => {
+        User.findOne({ "account.username": req.User.account.username }, (err, user) => {
             if (err) console.error(err);
             else {
                 user.urls.push(newUrl);
@@ -29,19 +28,18 @@ const shorten = (req, res, next) => {
         })
     } else {
         new Url({
-            original: req.body.original,
-            shortid: shortID,
-            timeCreate: new Date().toLocaleDateString('vi-VN', {
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric'
+            longUrl: req.body.longUrl,
+            shortId: shortId,
+            createAt: new Date().toLocaleDateString("vi-vn", {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: 'numeric', minute: 'numeric', second: 'numeric'
             })
         }).save((err) => {
             if (!err) console.log(">>>>> Guest: Save successfully");
             else console.error();
         })
     }
-    res.send(process.env.BASE_BACK + '/' + shortID)
+    res.send(process.env.API_SERVER + '/' + shortId);
 }
 
 export default shorten;

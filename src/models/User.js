@@ -2,15 +2,16 @@ import mongoose from "mongoose";
 
 const User = new mongoose.Schema({
     account: {
+        username: { type: String, required: true },
         email: { type: String, required: true },
         password: { type: String, required: true },
-        timeSignUp: { type: String, required: true },
+        createAt: { type: String, required: true },
     },
     urls: [
         {
-            original: { type: String },
-            shortid: { type: String },
-            timeCreate: { type: String },   
+            longUrl: { type: String },
+            shortId: { type: String },
+            createAt: { type: String },
         }
     ]
 });

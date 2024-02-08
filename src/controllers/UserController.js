@@ -1,39 +1,39 @@
-import mHome from './mongo/home.js'
-import mAllUrls from './mongo/arrurls.js'
-import mDelete from './mongo/delete.js'
-import mLogin from './mongo/login.js'
-import mLogout from './mongo/logout.js'
-import mReori from './mongo/reori.js'
-import mShorten from './mongo/shorten.js'
-import mSignup from './mongo/signup.js'
+import mAuth from './mongo/Auth.js'
+import mListUrls from './mongo/ListUrls.js'
+import mDelete from './mongo/Delete.js'
+import mLogin from './mongo/Login.js'
+import mLogout from './mongo/Logout.js'
+import mRedirect from './mongo/Redirect.js'
+import mShorten from './mongo/Shorten.js'
+import mSignup from './mongo/Signup.js'
 
-import fHome from './firebase/home.js'
-import fAllUrls from './firebase/arrurls.js'
-import fDelete from './firebase/delete.js'
-import fLogin from './firebase/login.js'
-import fLogout from './firebase/logout.js'
-import fReori from './firebase/reori.js'
-import fShorten from './firebase/shorten.js'
-import fSignup from './firebase/signup.js'
+// import fHome from './firebase/Home.js'
+// import fListUrls from './firebase/ListUrls.js'
+// import fDelete from './firebase/Delete.js'
+// import fLogin from './firebase/Login.js'
+// import fLogout from './firebase/Logout.js'
+// import fRedirect from './firebase/Redirect.js'
+// import fShorten from './firebase/Shorten.js'
+// import fSignup from './firebase/Signup.js'
 
 class UserController {
-    home = mHome;
+    auth = mAuth;
     shorten = mShorten;
-    allurls = mAllUrls;
+    listUrls = mListUrls;
     delete = mDelete;
-    reori = mReori;
+    redirect = mRedirect;
     login = mLogin;
     signup = mSignup;
     logout = mLogout
 
     // home = fHome;
     // shorten = fShorten;
-    // allurls = fAllUrls;
+    // listUrls = fListUrls;
     // delete = fDelete;
-    // reori = fReori;
+    // redirect = fRedirect;
     // login = fLogin;
     // signup = fSignup;
-    // logout = fLogout
+    // logout = fLogout;
 }
 
-export default new UserController
+export default new UserController;

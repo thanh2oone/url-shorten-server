@@ -7,11 +7,9 @@ export const connectMongo = () => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-
-        console.log('>>>>> ' + new Date().toLocaleDateString('vi-VN', {
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'   
+        console.log('>>>>> ' + new Date().toLocaleDateString("vi-vn", {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric'
         }) + ': Connected to MongoDB');
         console.log('>>>>> Server is running')
     } catch (e) {

@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken';
 const authenticateUser = async (req, res, next) => {
     const cookies = req.cookies;
 
-    if (cookies && cookies.access_token) {
+    if (cookies && cookies.access_token_shorten) {
         try {
-            const decoded = jwt.verify(cookies.access_token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(cookies.access_token_shorten, process.env.JWT_SECRET);
             const user = await User.findOne({ _id: decoded.userId });
             if (user) {
                 req.User = user;
